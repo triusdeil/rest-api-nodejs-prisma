@@ -9,6 +9,6 @@ app.use(express.json())
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/categories', categoriesRouter)
 
-app.listen(3000, () => {
-    console.log('app listening on port 3000')
+app.listen(process.env.PORT, () => {
+    console.log(`app listening on port ${process.env.PORT}`)
 })

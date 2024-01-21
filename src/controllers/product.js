@@ -6,9 +6,9 @@ export const getAllProducts = async (req, res) => {
 }
 
 export const getProductById = async (req, res) => {
-    const response = await prismaConnect.product.findFirst({where:{id: +req.params.id}})
-    if(!response)
-        return res.status(404).json({error: "Product not found"})
+    const response = await prismaConnect.product.findFirst({ where: { id: +req.params.id }, include: {category: true} })
+    if (!response)
+        return res.status(404).json({ error: "Product not found" })
     return res.json(response)
 }
 
@@ -18,10 +18,29 @@ export const createProduct = async (req, res) => {
 
 }
 
-export const deleteProduct = (req, res) => {
-
+export const deleteProduct = async (req, res) => {
+    try {
+        const response = await prismaConnect.product.delete({
+            where: {
+                id: +req.params.id,
+            },
+        });
+        return res.json(response)
+    } catch (error) {
+        return res.status(404).json({ error: "Product not found" })
+    }
 }
 
 export const updateProduct = (req, res) => {
-
+    try {
+        productUpdate = prismaConnect.product.update({
+            where:{
+                id: +req.params.id
+            },
+            data: req.body
+        })
+        return res.json(productUpdate)
+    } catch (error) {
+        return res.status(404).json({ error: "Product not found" })  
+    };
 }
